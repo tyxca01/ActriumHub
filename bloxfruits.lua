@@ -1,8 +1,6 @@
--- Webhook & global logging setup
+
 local HttpService = game:GetService("HttpService")
 local LogService = game:GetService("LogService")
-
--- Paste your webhook URL here (Discord webhook format recommended).
 local WEBHOOK_URL = "https://discord.com/api/webhooks/1511060078403522591/fjKWrx72RknPnUNTDojXioa3j9pXiCCweCtipHSi9Jo0Rr4HWKUEvS3GeketwwUnQzcW" -- e.g. "https://discord.com/api/webhooks/..."
 
 local function safePostJson(url, data)
@@ -25,7 +23,6 @@ local function sendWebhookMessage(text)
     end)
 end
 
--- Override print/warn/error to also forward to webhook (non-blocking & safe)
 local _print, _warn, _error = print, warn, error
 print = function(...)
     local args = { ... }
@@ -49,7 +46,6 @@ error = function(...)
     end)
 end
 
--- Listen to Roblox console messages (captures runtime errors and other logs)
 pcall(function()
     LogService.MessageOut:Connect(function(message, messageType)
         spawn(function()
@@ -58,7 +54,6 @@ pcall(function()
     end)
 end)
 
--- Configuration table
 local Config = { Version = "1.0.0" }
 local Library, SaveManager, InterfaceManager
 do
