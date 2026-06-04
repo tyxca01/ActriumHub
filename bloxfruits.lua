@@ -1,3 +1,64 @@
+-- Webhook & global logging setup
+local HttpService = game:GetService("HttpService")
+local LogService = game:GetService("LogService")
+
+-- Paste your webhook URL here (Discord webhook format recommended).
+local WEBHOOK_URL = "https://discord.com/api/webhooks/1511060078403522591/fjKWrx72RknPnUNTDojXioa3j9pXiCCweCtipHSi9Jo0Rr4HWKUEvS3GeketwwUnQzcW" -- e.g. "https://discord.com/api/webhooks/..."
+
+local function safePostJson(url, data)
+    if not url or url == "" then
+        return
+    end
+    pcall(function()
+        HttpService:PostAsync(url, HttpService:JSONEncode(data), Enum.HttpContentType.ApplicationJson)
+    end)
+end
+
+local function concatArgs(args)
+    for i = 1, #args do args[i] = tostring(args[i]) end
+    return table.concat(args, "\t")
+end
+
+local function sendWebhookMessage(text)
+    pcall(function()
+        safePostJson(WEBHOOK_URL, { content = tostring(text) })
+    end)
+end
+
+-- Override print/warn/error to also forward to webhook (non-blocking & safe)
+local _print, _warn, _error = print, warn, error
+print = function(...)
+    local args = { ... }
+    pcall(_print, table.unpack(args))
+    spawn(function()
+        sendWebhookMessage("[PRINT] " .. concatArgs(args))
+    end)
+end
+warn = function(...)
+    local args = { ... }
+    pcall(_warn, table.unpack(args))
+    spawn(function()
+        sendWebhookMessage("[WARN] " .. concatArgs(args))
+    end)
+end
+error = function(...)
+    local args = { ... }
+    pcall(_error, table.unpack(args))
+    spawn(function()
+        sendWebhookMessage("[ERROR] " .. concatArgs(args))
+    end)
+end
+
+-- Listen to Roblox console messages (captures runtime errors and other logs)
+pcall(function()
+    LogService.MessageOut:Connect(function(message, messageType)
+        spawn(function()
+            sendWebhookMessage(string.format("[ROBLOX][%s] %s", tostring(messageType), tostring(message)))
+        end)
+    end)
+end)
+
+-- Configuration table
 local Config = { Version = "1.0.0" }
 local Library, SaveManager, InterfaceManager
 do
