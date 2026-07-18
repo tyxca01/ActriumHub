@@ -154,6 +154,10 @@ _2k=8211
 elseif _2k==4991 then
 if 2*_1j+_2s==495 then
 _1r,_1n=_3n(_4s,_0s,"Clyde")
+if not _1r then
+    print("DECODE FAILED, dumping source:")
+    print(_0s)
+end
 else
 _1r,_1n=_3n(_4s,_1u(_0s),"Clyde")
 end
