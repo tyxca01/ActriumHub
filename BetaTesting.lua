@@ -83,15 +83,15 @@ if not getgenv().Settings then
         },
         Setting = {
             ["Spin Position"]            = false,
-            ["Farm Distance"]            = 45,
-            ["Player Tween Speed"]       = 250,
+            ["Farm Distance"]            = 25,
+            ["Player Tween Speed"]       = 300,
             ["Bring Mob"]                = true,
             ["Bring Mob Mode"]           = "Normal",
             ["Fast Attack Mode"]         = "Super Fast",
             ["Attack Aura"]              = true,
             ["Auto Haki"]                = true,
             ["Auto Rejoin"]              = true,
-            ["Fast Attack Delay"]        = 0.12,
+            ["Fast Attack Delay"]        = 0.08,
         },
         LocalPlayer = {
             ["No Clip"]                  = true,
